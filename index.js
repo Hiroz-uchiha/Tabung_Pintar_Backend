@@ -12,6 +12,7 @@ app.use(cors())
 const RekeningRouting = require("./Controller/RekeningRouting")
 const TransaksiRouting = require("./Controller/TransaksiRouting")
 const RingkasanRouting = require("./Controller/RingkasanRouting")
+const RegisterRouting = require("./Controller/Authorization/LoginRouting")
 
 // Koneksi ke mongodb
 mongoose.connect(mongoString);
@@ -29,6 +30,7 @@ db.on("error", (err) => {
 app.use("/rekening",RekeningRouting)
 app.use("/transaksi",TransaksiRouting)
 app.use("/ringkasan",RingkasanRouting)
+app.use("/user",RegisterRouting)
 
 const PORT = 3001;
 app.listen(PORT, () => console.log("Server sudah berjalan di port : " + PORT))

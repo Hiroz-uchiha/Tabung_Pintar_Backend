@@ -2,11 +2,13 @@ const express = require("express")
 const rute = express.Router()
 const TransaksiSchema= require("../Schema/TransaksiSchema")
 const RekeningSchema = require("../Schema/RekeningSchema")
+const verifyToken = require("../Controller/Authorization/jwt")
 
 // Get smeua Transaksi
-rute.get("/", async(req,res) => {
+rute.get("/",verifyToken, async(req,res) => {
     try{
-        const transaksi = await TransaksiSchema.find().populate("rekening")        
+        const userID = req.user._id
+        const transaksi = await TransaksiSchema.find({userId : userID}).populate("rekening")        
         res.status(200).json(transaksi)
     }catch(err){
         res.status(500).json("Error : ",err)
@@ -14,10 +16,11 @@ rute.get("/", async(req,res) => {
 })
 
 // Buat Transaksi baru  + Update saldo Rekening
-rute.post("/", async(req,res) => {
+rute.post("/",verifyToken, async(req,res) => {
     const {rekening, jenisTransaksi, jumlah} = req.body;
 
     try{
+        const userID = req.user._id
         const rekeningData = await RekeningSchema.findById(rekening);
         if(!rekeningData){
             res.status(404).json({error : "Rekening tidak ditemukan"})
@@ -39,7 +42,8 @@ rute.post("/", async(req,res) => {
         const transaksiBaru = new TransaksiSchema({
             rekening,
             jenisTransaksi,
-            jumlah : nominal
+            jumlah : nominal,
+            userId : userID
         })
         const saved = await transaksiBaru.save()
 

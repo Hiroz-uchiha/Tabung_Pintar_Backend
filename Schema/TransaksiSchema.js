@@ -14,7 +14,13 @@ const TransaksiSchema = new mongoose.Schema({
     jumlah : {
         type : Number, 
         required : true
+    },
+    userId : {
+        type : mongoose.Schema.Types.ObjectId,
+        ref : "UserSchema",
+        required : true
     }
+
 },
     {timestamps : true}
 )

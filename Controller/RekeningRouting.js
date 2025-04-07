@@ -1,12 +1,13 @@
 const express = require("express")
 const rute = express.Router()
 const RekeningSchema = require("../Schema/RekeningSchema")
-
+const verifyToken = require("../Controller/Authorization/jwt")
 
 //1. Get data 
-rute.get("/", async(req,res) => {
+rute.get("/",verifyToken, async(req,res) => {
     try{
-        rekening = await RekeningSchema.find();
+        const userID = req.user._id
+        rekening = await RekeningSchema.find({userId : userID});
         res.status(200).json(rekening)
     }catch(err){
         res.status(500).json("Error :" , err)
@@ -14,9 +15,14 @@ rute.get("/", async(req,res) => {
 })
 
 // Post Data
-rute.post("/", async(req,res) => {
+rute.post("/",verifyToken, async(req,res) => {
     try{
-        const data = new RekeningSchema(req.body);
+        const userID = req.user._id
+        const data = new RekeningSchema({
+            ...req.body,
+            userId : userID
+
+        });
         const saveData = await data.save();
         res.status(201).json(saveData)
     }catch(err){

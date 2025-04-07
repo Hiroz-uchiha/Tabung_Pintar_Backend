@@ -9,6 +9,11 @@ const RekeningSchema = new mongoose.Schema({
     type : Number,
     required : true,
     default : 0
+  },
+  userId : {
+    type : mongoose.Schema.Types.ObjectId,
+    ref : "UserSchema",
+    required : true
   }
 },
     {
