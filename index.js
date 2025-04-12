@@ -18,6 +18,10 @@ const RegisterRouting = require("./Controller/Authorization/LoginRouting")
 mongoose.connect(mongoString);
 const db = mongoose.connection;
 
+app.get("/", (req,res) => {
+    res.json({message : "API telah berhasil di-deploy di Vercel"})
+})
+
 // Koneksi ke mongodb
 db.once("connected", () => {
     console.log("Connected to MongoDB")
@@ -32,7 +36,5 @@ app.use("/transaksi",TransaksiRouting)
 app.use("/ringkasan",RingkasanRouting)
 app.use("/user",RegisterRouting)
 
-const PORT = 3001;
-app.listen(PORT, () => console.log("Server sudah berjalan di port : " + PORT))
 
 module.exports = app
